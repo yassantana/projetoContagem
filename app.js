@@ -1,46 +1,50 @@
-const secondsContainer = document.querySelector('#seconds')
-const minutesContainer = document.querySelector('#minutes')
-const hoursContainer = document.querySelector('#hours')
-const daysContainer = document.querySelector('#days')
-const thisYearContainer = document.querySelector('#year')
-const spinnerLoading = document.querySelector('#loading')
+const secondsContainer   = document.querySelector('#seconds')
+const minutesContainer   = document.querySelector('#minutes')
+const hoursContainer     = document.querySelector('#hours')
+const daysContainer      = document.querySelector('#days')
+const spinnerLoading     = document.querySelector('#loading')
 const countdownContainer = document.querySelector('#countdown')
 
-const thisYear = new Date().getFullYear() 
-const newYearTime = new Date('2025-12-17T00:00:00')
+// 2) Data de início: primeiro beijo em 17/12/2022
+const startDate = new Date('2022-12-17T00:00:00')
 
-thisYearContainer.textContent = thisYear
-
+// 3) Função de formatação: 0 → '00'
 const getTimeUnit = unit => unit < 10 ? '0' + unit : unit
 
+// 4) Insere os valores formatados no HTML
 const insertCountdownValues = ({ days, hours, minutes, seconds }) => {
-secondsContainer.textContent = getTimeUnit(seconds)
-minutesContainer.textContent = getTimeUnit(minutes)
-hoursContainer.textContent = getTimeUnit(hours)
-daysContainer.textContent = getTimeUnit(days)
-
+  daysContainer.textContent    = getTimeUnit(days)
+  hoursContainer.textContent   = getTimeUnit(hours)
+  minutesContainer.textContent = getTimeUnit(minutes)
+  secondsContainer.textContent = getTimeUnit(seconds)
 }
 
+// 5) Calcula a diferença entre agora e a data de início
 const updateCountdown = () => {
-    const currentTime = new Date()
-        const difference = newYearTime - currentTime
-        const days = Math.floor(difference / 1000 / 60 / 60 / 24)
-        const hours = Math.floor(difference / 1000 / 60 / 60) % 24
-        const minutes = Math.floor(difference / 1000 / 60) % 60
-        const seconds = Math.floor(difference / 1000) % 60
+  const currentTime = new Date()
+  const difference  = currentTime - startDate
 
-    insertCountdownValues ({ days, hours, minutes, seconds })
+  const days    = Math.floor(difference / (1000 * 60 * 60 * 24))
+  const hours   = Math.floor(difference / (1000 * 60 * 60)) % 24
+  const minutes = Math.floor(difference / (1000 * 60)) % 60
+  const seconds = Math.floor(difference / 1000) % 60
 
+  insertCountdownValues({ days, hours, minutes, seconds })
 }
 
+// 6) Quando o carregamento terminar, mostra o contador
 const handleCountdownDisplay = () => {
-    spinnerLoading.remove()
-    countdownContainer.style.display = 'flex'
-  }
+  spinnerLoading.remove()
+  countdownContainer.style.display = 'flex'
+}
 
-setTimeout(handleCountdownDisplay, 1000)
+// 7) Liga as duas tarefas:
+//    – Depois de 1s remove o spinner e mostra o contador
+//    – A cada 1s atualiza os valores
+setTimeout    (handleCountdownDisplay, 1000)
+setInterval   (updateCountdown,        1000)
 
-setInterval(updateCountdown, 1000)
+// corações fofos
 
 const heartColors = [
     '#ff69b4', '#ff1493', '#ff6ec7', '#db7093', '#ffb6c1', '#f08080', 
